@@ -8,6 +8,8 @@ use App\Http\Controllers\ClothesController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\WardrobesController;
 
+use Inertia\Inertia;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,27 +24,27 @@ use App\Http\Controllers\WardrobesController;
 
 // Index routes
 
-Route::get('/', [ ClothesController::class,'showClothes'])->name('index')->middleware('auth');
+Route::get('/', [ClothesController::class, 'showClothes'])->name('index')->middleware('auth');
 
-Route::get('/importGeneral', [ WardrobesController::class,'importGeneralArticles'])->name('importGeneral')->middleware('auth');
+Route::get('/importGeneral', [WardrobesController::class, 'importGeneralArticles'])->name('importGeneral')->middleware('auth');
 
 //Armario routes
 
 Route::prefix('armario')->middleware('auth')->group(function () {
-    Route::get('/', [ WardrobesController::class,'showClothesWardrobe'])->name('armario');
-    Route::get('/{name}', [ CategoriesController::class,'filterByCategory'])->name('filteredClothes');
+    Route::get('/', [WardrobesController::class, 'showClothesWardrobe'])->name('armario');
+    Route::get('/{name}', [CategoriesController::class, 'filterByCategory'])->name('filteredClothes');
 });
 //Login y Register routes
 
-    Route::get('/login', function () {
-        return view('auth.login');
-        })->name('login')->middleware('guest');
+Route::get('/login', function () {
+    return Inertia::render('Home/Home');
+})->name('login')->middleware('guest');
 
-    Route::get('/register', function () {
-        return view('auth.register');
-        })->name('register')->middleware('guest');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register')->middleware('guest');
 
-   // Account routes
+// Account routes
 Route::prefix('account')->middleware('verified')->group(function () {
     Route::get('/', [AccountController::class, 'index'])->name('account');
 
@@ -83,4 +85,4 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/categories/restore/{id}', [AdminController::class, 'restoreCategory'])->name('admin.categories.restore');
 });
 
-Route::get('/index/{id}/{quantity}',[WardrobesController::class, 'addArticle'])->name('wardrobe.addArticle');
+Route::get('/index/{id}/{quantity}', [WardrobesController::class, 'addArticle'])->name('wardrobe.addArticle');
